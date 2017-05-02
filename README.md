@@ -59,7 +59,7 @@ PHP Library Usage
         'console_path' => 'console'         // console api path (defaults to 'console')
         'http_client' => null,              // Any http client adapter that supports php-http/httplug
     ]);
-    
+
     $client = new CloudStackClient($config);
 ```
 
@@ -102,26 +102,15 @@ Here is an example of a method generated that has one required (`$id`) and one o
      * Stops a virtual machine.
      *
      * @param string $id The ID of the virtual machine
-     * @param array  $optArgs {
+     * @param array $optArgs {
      *     @type string $forced Force stop the VM (vm is marked as Stopped even when command fails to be send to the backend).  The caller knows the VM is stopped.
      * }
      * @return \ENA\CloudStack\CloudStackResponse\AsyncJobStartResponse
      */
     public function stopVirtualMachine($id, array $optArgs = []) {
-        $command = new CloudStackCommandApi(
-            $this->configuration,
-            'stopVirtualMachine',
-            [
-                'id' => $id,
-            ] + $optArgs
-        );
-    
-        return new CloudStackResponse\AsyncJobStartResponse(
-            $this->decodeBody(
-                $this->doRequest($command->createPsr7Request()),
-                'stopVirtualMachine'
-            ),
-            '\\ENA\\CloudStack\\CloudStackResponse\\StopVirtualMachineResponse'
-        );
+        return $this->doRequest(new CloudStackRequest\StopVirtualMachineRequest(
+            $id,
+            $optArgs
+        ));
     }
 ```
